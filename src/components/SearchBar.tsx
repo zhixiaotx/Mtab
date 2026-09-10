@@ -722,14 +722,14 @@ export const SearchBar: React.FC<SearchBarProps> = ({
     <div ref={containerRef} className="w-full max-w-2xl px-4 my-4 relative z-20">
       {/* 圆角矩形胶囊搜索栏 (统一纯净毛玻璃) */}
       <div
-        className={`flex items-center w-full h-13 sm:h-14 rounded-full p-1.5 site-glass border-0 transition-all duration-300 shadow-xl ${
+        className={`flex items-center w-full h-13 sm:h-14 rounded-full p-1.5 site-glass transition-all duration-300 shadow-xl ${
           isDarkMode
             ? isFocused
-              ? 'bg-black/60 ring-2 ring-amber-400/35 shadow-2xl shadow-black/50'
-              : 'bg-black/40 hover:bg-black/50 shadow-black/40'
+              ? 'bg-neutral-950/85 border border-amber-400/50 ring-2 ring-amber-400/35 shadow-2xl shadow-black/60'
+              : 'bg-neutral-950/70 border border-white/10 hover:bg-neutral-950/85 shadow-black/40'
             : isFocused
-            ? 'bg-white/80 ring-2 ring-amber-500/35 shadow-xl shadow-slate-900/15'
-            : 'bg-white/60 hover:bg-white/75 shadow-slate-900/15'
+            ? 'bg-white/95 border border-amber-500/50 ring-2 ring-amber-500/35 shadow-xl shadow-slate-900/15'
+            : 'bg-white/90 border border-slate-200/80 hover:bg-white shadow-slate-900/10'
         }`}
       >
         {/* 搜索引擎切换胶囊按钮 */}

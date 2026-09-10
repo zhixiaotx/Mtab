@@ -73,18 +73,18 @@ export const SortableBookmarkCard: React.FC<SortableBookmarkCardProps> = ({
           onCardClick(e, item);
         }
       }}
-      className={`group relative flex items-center gap-3 p-3.5 site-glass border-0 transition-all duration-200 cursor-pointer select-none ${
+      className={`group relative flex items-center gap-3 p-3.5 transition-all duration-200 cursor-pointer select-none ${
         isOverlay ? 'ring-2 ring-amber-400 z-50' : 'hover:-translate-y-0.5 hover:scale-[1.02] shadow-lg hover:shadow-2xl'
       } ${getRadiusClass()} ${
         isDarkMode
-          ? 'bg-black/40 hover:bg-black/55 text-white shadow-black/30'
-          : 'bg-white/60 hover:bg-white/80 text-slate-800 shadow-slate-900/10'
+          ? 'bg-neutral-900/90 hover:bg-neutral-900 text-white border border-white/20 shadow-black/50 backdrop-blur-xl'
+          : 'bg-white/95 hover:bg-white text-slate-900 border border-slate-300/90 shadow-slate-900/15 backdrop-blur-xl'
       } ${isBanner ? 'col-span-2 sm:col-span-2' : isLarge ? 'col-span-2 row-span-2' : ''}`}
     >
       {/* 拖拽把手微提示 (悬停时微现) */}
       <div
         className={`absolute -left-1 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-60 transition-opacity pointer-events-none hidden sm:block ${
-          isDarkMode ? 'text-white/40' : 'text-slate-400'
+          isDarkMode ? 'text-white/60' : 'text-slate-500'
         }`}
       >
         <GripVertical className="w-3.5 h-3.5" />
@@ -101,16 +101,16 @@ export const SortableBookmarkCard: React.FC<SortableBookmarkCardProps> = ({
       {/* 网址名称与描述 (Logo 右边) */}
       <div className="flex-1 min-w-0 overflow-hidden text-left pr-2">
         <div
-          className={`text-sm font-semibold truncate transition-colors ${
-            isDarkMode ? 'text-white group-hover:text-amber-300' : 'text-slate-900 group-hover:text-amber-600'
+          className={`text-sm font-bold truncate transition-colors ${
+            isDarkMode ? 'text-white group-hover:text-amber-300' : 'text-slate-950 group-hover:text-amber-600'
           }`}
           title={item.name}
         >
           {item.name}
         </div>
         <div
-          className={`text-[11px] truncate mt-0.5 transition-colors ${
-            isDarkMode ? 'text-white/60 group-hover:text-white/80' : 'text-slate-500 group-hover:text-slate-700'
+          className={`text-xs truncate mt-0.5 font-medium transition-colors ${
+            isDarkMode ? 'text-neutral-200 group-hover:text-white' : 'text-slate-700 group-hover:text-slate-950'
           }`}
           title={item.description || item.url}
         >

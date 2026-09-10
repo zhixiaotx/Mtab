@@ -196,14 +196,18 @@ export const HeaderClock: React.FC<HeaderClockProps> = ({
       <div className="flex flex-col items-center justify-center text-center">
         {/* 主时钟数字 */}
         <div
-          className="flex items-baseline font-light tracking-tight drop-shadow-lg transition-colors duration-300"
+          className={`flex items-baseline font-light tracking-tight transition-colors duration-300 ${
+            isDarkMode
+              ? 'drop-shadow-[0_4px_16px_rgba(0,0,0,0.85)]'
+              : 'drop-shadow-[0_2px_8px_rgba(255,255,255,0.9)]'
+          }`}
           style={{ color: isDarkMode ? (config.theme.timeColor || '#ffffff') : (config.theme.timeColor === '#ffffff' ? '#0f172a' : config.theme.timeColor || '#0f172a') }}
         >
-          <span className="text-6xl sm:text-7xl md:text-8xl font-medium tracking-tight font-mono">
+          <span className="text-6xl sm:text-7xl md:text-8xl font-semibold tracking-tight font-mono">
             {hours}:{minutes}
           </span>
           {config.theme.timeSeconds && (
-            <span className="text-xl sm:text-2xl font-normal font-mono opacity-70 ml-2">
+            <span className="text-xl sm:text-2xl font-normal font-mono opacity-80 ml-2">
               :{seconds}
             </span>
           )}
@@ -212,17 +216,19 @@ export const HeaderClock: React.FC<HeaderClockProps> = ({
         {/* 农历与公历信息 */}
         {config.theme.timeLunar && (
           <div
-            className={`mt-2.5 flex items-center justify-center gap-2.5 text-xs sm:text-sm font-medium drop-shadow-md transition-colors ${
-              isDarkMode ? 'text-white/90' : 'text-slate-800'
+            className={`mt-2.5 flex items-center justify-center gap-2.5 text-xs sm:text-sm font-semibold transition-colors ${
+              isDarkMode
+                ? 'text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]'
+                : 'text-slate-900 drop-shadow-[0_1px_4px_rgba(255,255,255,0.9)]'
             }`}
           >
             <span>{lunar.solarStr}</span>
-            <span className="opacity-40">·</span>
+            <span className="opacity-50">·</span>
             <span>{lunar.weekStr}</span>
-            <span className="opacity-40">·</span>
-            <span className="text-amber-500 font-semibold">{lunar.monthDayStr}</span>
-            <span className="opacity-40 hidden sm:inline">·</span>
-            <span className="opacity-75 hidden sm:inline">{lunar.yearStr}</span>
+            <span className="opacity-50">·</span>
+            <span className={isDarkMode ? 'text-amber-300 font-bold drop-shadow' : 'text-amber-700 font-bold'}>{lunar.monthDayStr}</span>
+            <span className="opacity-50 hidden sm:inline">·</span>
+            <span className="opacity-80 hidden sm:inline">{lunar.yearStr}</span>
           </div>
         )}
       </div>

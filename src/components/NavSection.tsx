@@ -53,7 +53,11 @@ export const NavSection: React.FC<NavSectionProps> = ({
       <div className="flex items-center justify-between gap-3 mb-3.5 group/sec">
         <div
           onClick={() => setIsCollapsed(!isCollapsed)}
-          className="flex items-center gap-2 cursor-pointer select-none py-1"
+          className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-xl cursor-pointer select-none transition-all shadow-md ${
+            isDarkMode
+              ? 'bg-neutral-900/85 hover:bg-neutral-900 text-white border border-white/15 shadow-black/40 backdrop-blur-xl'
+              : 'bg-white/95 hover:bg-white text-slate-900 border border-slate-300/80 shadow-slate-900/10 backdrop-blur-xl'
+          }`}
         >
           {isCollapsed ? (
             <Folder className="w-4 h-4 text-amber-400 flex-shrink-0" />
@@ -62,15 +66,15 @@ export const NavSection: React.FC<NavSectionProps> = ({
           )}
 
           {/* 完整多级面包屑标题 */}
-          <div className="flex items-center flex-wrap gap-1 text-sm sm:text-base font-semibold">
+          <div className="flex items-center flex-wrap gap-1 text-sm sm:text-base font-bold">
             {categoryNode.categoryPath.map((crumb, idx) => (
               <React.Fragment key={idx}>
-                {idx > 0 && <span className="opacity-30 text-xs mx-0.5">/</span>}
+                {idx > 0 && <span className={`text-xs mx-0.5 ${isDarkMode ? 'text-white/40' : 'text-slate-400'}`}>/</span>}
                 <span
                   className={
                     idx === categoryNode.categoryPath.length - 1
-                      ? isDarkMode ? 'text-amber-300 font-bold' : 'text-amber-600 font-bold'
-                      : isDarkMode ? 'text-white/70' : 'text-slate-600'
+                      ? isDarkMode ? 'text-amber-300 font-extrabold' : 'text-amber-800 font-extrabold'
+                      : isDarkMode ? 'text-white font-bold' : 'text-slate-900 font-bold'
                   }
                 >
                   {crumb}

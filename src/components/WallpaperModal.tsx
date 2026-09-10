@@ -48,10 +48,10 @@ export const WallpaperModal: React.FC<WallpaperModalProps> = ({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/65 backdrop-blur-md animate-in fade-in duration-200">
       <div
-        className={`relative w-full max-w-2xl max-h-[88vh] rounded-3xl shadow-2xl flex flex-col overflow-hidden animate-in zoom-in-95 duration-150 ${
+        className={`relative w-full max-w-2xl max-h-[88vh] rounded-3xl shadow-2xl flex flex-col overflow-hidden animate-in zoom-in-95 duration-150 dark:text-slate-200 text-slate-800 ${
           isDarkMode
-            ? 'bg-neutral-900/95 backdrop-blur-2xl text-white shadow-black/60'
-            : 'bg-white/95 backdrop-blur-2xl text-slate-900 shadow-slate-900/20'
+            ? 'bg-neutral-900/95 backdrop-blur-2xl shadow-black/60'
+            : 'bg-white/95 backdrop-blur-2xl shadow-slate-900/20'
         }`}
       >
         {/* 统一顶部标题栏 */}
@@ -65,10 +65,10 @@ export const WallpaperModal: React.FC<WallpaperModalProps> = ({
               <Sliders className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-lg sm:text-xl font-bold flex items-center gap-2">
+              <h3 className={`text-lg sm:text-xl font-bold flex items-center gap-2 ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
                 壁纸与个性化设置
               </h3>
-              <p className={`text-xs mt-0.5 ${isDarkMode ? 'text-white/50' : 'text-slate-500'}`}>
+              <p className={`text-xs mt-0.5 ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>
                 定制专属壁纸、高斯模糊、遮罩通透度及桌面时钟风格
               </p>
             </div>
@@ -77,7 +77,7 @@ export const WallpaperModal: React.FC<WallpaperModalProps> = ({
             type="button"
             onClick={onClose}
             className={`p-2 rounded-full transition-colors cursor-pointer flex-shrink-0 ${
-              isDarkMode ? 'text-white/50 hover:text-white hover:bg-white/10' : 'text-slate-400 hover:text-slate-800 hover:bg-slate-100'
+              isDarkMode ? 'text-slate-400 hover:text-white hover:bg-white/10' : 'text-slate-400 hover:text-slate-800 hover:bg-slate-100'
             }`}
             title="关闭窗口"
           >
@@ -99,7 +99,7 @@ export const WallpaperModal: React.FC<WallpaperModalProps> = ({
                 activeTab === 'wallpaper'
                   ? 'bg-amber-400 text-neutral-950 font-bold shadow-sm'
                   : isDarkMode
-                  ? 'text-white/70 hover:text-white hover:bg-white/10'
+                  ? 'text-slate-300 hover:text-white hover:bg-white/10'
                   : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
               }`}
             >
@@ -113,7 +113,7 @@ export const WallpaperModal: React.FC<WallpaperModalProps> = ({
                 activeTab === 'visual'
                   ? 'bg-amber-400 text-neutral-950 font-bold shadow-sm'
                   : isDarkMode
-                  ? 'text-white/70 hover:text-white hover:bg-white/10'
+                  ? 'text-slate-300 hover:text-white hover:bg-white/10'
                   : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
               }`}
             >
@@ -127,7 +127,7 @@ export const WallpaperModal: React.FC<WallpaperModalProps> = ({
                 activeTab === 'clock'
                   ? 'bg-amber-400 text-neutral-950 font-bold shadow-sm'
                   : isDarkMode
-                  ? 'text-white/70 hover:text-white hover:bg-white/10'
+                  ? 'text-slate-300 hover:text-white hover:bg-white/10'
                   : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
               }`}
             >

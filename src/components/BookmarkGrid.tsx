@@ -178,8 +178,8 @@ export const BookmarkGrid: React.FC<BookmarkGridProps> = ({
         {/* 一级分类滑动条 */}
         <div className="overflow-x-auto pb-1 scrollbar-none flex-1">
           <div
-            className={`inline-flex items-center gap-1.5 p-1 rounded-2xl site-glass border-0 shadow-lg ${
-              isDarkMode ? 'bg-black/40 shadow-black/30' : 'bg-white/60 shadow-slate-900/10'
+            className={`inline-flex items-center gap-1.5 p-1 rounded-2xl site-glass shadow-lg ${
+              isDarkMode ? 'bg-neutral-950/70 border border-white/10 shadow-black/40' : 'bg-white/85 border border-slate-200/80 shadow-slate-900/10'
             }`}
           >
             {/* 全部选项 */}
@@ -190,18 +190,18 @@ export const BookmarkGrid: React.FC<BookmarkGridProps> = ({
                 activeCategory === '全部'
                   ? 'bg-amber-400 text-neutral-950 font-bold shadow-md'
                   : isDarkMode
-                  ? 'text-white/75 hover:text-white hover:bg-white/10'
-                  : 'text-slate-700 hover:text-slate-950 hover:bg-black/5'
+                  ? 'text-white/85 hover:text-white hover:bg-white/15'
+                  : 'text-slate-800 hover:text-slate-950 hover:bg-slate-100 font-semibold'
               }`}
             >
               <span>全部</span>
               <span
-                className={`text-[10px] px-1.5 py-0.2 rounded-full ${
+                className={`text-[10px] px-1.5 py-0.2 rounded-full font-semibold ${
                   activeCategory === '全部'
                     ? 'bg-neutral-950/20 text-neutral-900'
                     : isDarkMode
-                    ? 'bg-white/10 text-white/60'
-                    : 'bg-black/5 text-slate-600'
+                    ? 'bg-white/15 text-white/80'
+                    : 'bg-slate-200 text-slate-700'
                 }`}
               >
                 {bookmarks.length}
@@ -220,18 +220,18 @@ export const BookmarkGrid: React.FC<BookmarkGridProps> = ({
                     isActive
                       ? 'bg-amber-400 text-neutral-950 font-bold shadow-md'
                       : isDarkMode
-                      ? 'text-white/75 hover:text-white hover:bg-white/10'
-                      : 'text-slate-700 hover:text-slate-950 hover:bg-black/5'
+                      ? 'text-white/85 hover:text-white hover:bg-white/15'
+                      : 'text-slate-800 hover:text-slate-950 hover:bg-slate-100 font-semibold'
                   }`}
                 >
                   <span>{catNode.name}</span>
                   <span
-                    className={`text-[10px] px-1.5 py-0.2 rounded-full ${
+                    className={`text-[10px] px-1.5 py-0.2 rounded-full font-semibold ${
                       isActive
                         ? 'bg-neutral-950/20 text-neutral-900'
                         : isDarkMode
-                        ? 'bg-white/10 text-white/60'
-                        : 'bg-black/5 text-slate-600'
+                        ? 'bg-white/15 text-white/80'
+                        : 'bg-slate-200 text-slate-700'
                     }`}
                   >
                     {catNode.count}
@@ -246,8 +246,8 @@ export const BookmarkGrid: React.FC<BookmarkGridProps> = ({
         <div className="flex items-center gap-2 self-end sm:self-auto flex-shrink-0">
           {/* 模式切换：多级小节 (NavSection) / 紧凑平铺 (Grid) */}
           <div
-            className={`flex items-center p-1 rounded-xl site-glass border-0 text-xs shadow-md ${
-              isDarkMode ? 'bg-black/40 text-white/70 shadow-black/30' : 'bg-white/60 text-slate-700 shadow-slate-900/10'
+            className={`flex items-center p-1 rounded-xl site-glass text-xs shadow-md ${
+              isDarkMode ? 'bg-neutral-950/70 border border-white/10 text-white/80 shadow-black/30' : 'bg-white/85 border border-slate-200/80 text-slate-800 shadow-slate-900/10'
             }`}
           >
             <button
@@ -294,7 +294,7 @@ export const BookmarkGrid: React.FC<BookmarkGridProps> = ({
       {/* 二级子分类筛选横栏 (当选中分类存在子分类时展示) */}
       {activeSubCategories.length > 0 && (
         <div className="flex items-center gap-2 mb-4 overflow-x-auto pb-1 scrollbar-none animate-in fade-in duration-200">
-          <span className={`text-xs flex items-center gap-1 pl-1 ${isDarkMode ? 'text-white/40' : 'text-slate-400'}`}>
+          <span className={`text-xs flex items-center gap-1 pl-1 font-semibold ${isDarkMode ? 'text-white/70' : 'text-slate-600'}`}>
             <span>子分类</span>
             <ChevronRight className="w-3 h-3" />
           </span>
@@ -303,16 +303,16 @@ export const BookmarkGrid: React.FC<BookmarkGridProps> = ({
               key={subNode.id}
               type="button"
               onClick={() => onSelectCategory(subNode.fullPath)}
-              className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs transition-all cursor-pointer whitespace-nowrap border ${
+              className={`flex items-center gap-1 px-3 py-1 rounded-xl text-xs transition-all cursor-pointer whitespace-nowrap border shadow-sm backdrop-blur-md ${
                 activeCategory === subNode.fullPath
-                  ? 'bg-amber-400/90 text-neutral-950 font-bold border-amber-400'
+                  ? 'bg-amber-400 text-neutral-950 font-bold border-amber-400 shadow'
                   : isDarkMode
-                  ? 'bg-black/20 text-white/70 border-white/10 hover:bg-white/10'
-                  : 'bg-white/60 text-slate-700 border-slate-200 hover:bg-white'
+                  ? 'bg-neutral-900/90 text-white font-medium border-white/20 hover:bg-neutral-800'
+                  : 'bg-white/95 text-slate-900 font-semibold border-slate-300 hover:bg-white'
               }`}
             >
               <span>{subNode.name}</span>
-              <span className="text-[10px] opacity-70">({subNode.count})</span>
+              <span className="text-[10px] opacity-80">({subNode.count})</span>
             </button>
           ))}
         </div>

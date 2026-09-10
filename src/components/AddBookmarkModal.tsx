@@ -143,10 +143,10 @@ export const AddBookmarkModal: React.FC<AddBookmarkModalProps> = ({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/65 backdrop-blur-md animate-in fade-in duration-200">
       <div
-        className={`relative w-full max-w-2xl max-h-[88vh] rounded-3xl site-glass border-0 shadow-2xl flex flex-col overflow-hidden animate-in zoom-in-95 duration-150 ${
+        className={`relative w-full max-w-2xl max-h-[88vh] rounded-3xl site-glass border-0 shadow-2xl flex flex-col overflow-hidden animate-in zoom-in-95 duration-150 dark:text-slate-200 text-slate-800 ${
           isDarkMode
-            ? 'bg-neutral-900/90 text-white shadow-black/60'
-            : 'bg-white/90 text-slate-900 shadow-slate-900/20'
+            ? 'bg-neutral-900/90 shadow-black/60'
+            : 'bg-white/90 shadow-slate-900/20'
         }`}
       >
         {/* 统一顶部标题栏 */}
@@ -160,10 +160,10 @@ export const AddBookmarkModal: React.FC<AddBookmarkModalProps> = ({
               <Sparkles className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-lg sm:text-xl font-bold flex items-center gap-2">
+              <h3 className={`text-lg sm:text-xl font-bold flex items-center gap-2 ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
                 {editingItem ? '编辑快捷方式' : '添加快捷方式'}
               </h3>
-              <p className={`text-xs mt-0.5 ${isDarkMode ? 'text-white/50' : 'text-slate-500'}`}>
+              <p className={`text-xs mt-0.5 ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>
                 支持自动提取网站 Logo、20+ 图标源切换、自定义色彩与卡片尺寸
               </p>
             </div>
@@ -172,7 +172,7 @@ export const AddBookmarkModal: React.FC<AddBookmarkModalProps> = ({
             type="button"
             onClick={onClose}
             className={`p-2 rounded-full transition-colors cursor-pointer flex-shrink-0 ${
-              isDarkMode ? 'text-white/50 hover:text-white hover:bg-white/10' : 'text-slate-400 hover:text-slate-800 hover:bg-slate-100'
+              isDarkMode ? 'text-slate-400 hover:text-white hover:bg-white/10' : 'text-slate-400 hover:text-slate-800 hover:bg-slate-100'
             }`}
             title="关闭窗口"
           >

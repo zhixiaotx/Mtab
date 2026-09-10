@@ -190,10 +190,10 @@ export const WidgetsDrawer: React.FC<WidgetsDrawerProps> = ({
   return (
     <div className="fixed inset-0 z-50 flex justify-end bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
       <div
-        className={`w-full max-w-xl h-full shadow-2xl flex flex-col animate-in slide-in-from-right duration-300 ${
+        className={`w-full max-w-xl h-full shadow-2xl flex flex-col animate-in slide-in-from-right duration-300 dark:text-slate-200 text-slate-800 ${
           isDarkMode
-            ? 'bg-neutral-900/95 backdrop-blur-2xl text-white border-l border-white/10'
-            : 'bg-white/95 backdrop-blur-2xl text-slate-900 border-l border-slate-200'
+            ? 'bg-neutral-900/95 backdrop-blur-2xl border-l border-white/10'
+            : 'bg-white/95 backdrop-blur-2xl border-l border-slate-200'
         }`}
       >
         {/* 顶部标题与关闭 */}
@@ -204,13 +204,13 @@ export const WidgetsDrawer: React.FC<WidgetsDrawerProps> = ({
         >
           <div className="flex items-center gap-2">
             <Sparkles className="w-5 h-5 text-amber-400" />
-            <h2 className="text-lg font-bold">Mtab 实用小工具</h2>
+            <h2 className={`text-lg font-bold ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>Mtab 实用小工具</h2>
           </div>
           <button
             type="button"
             onClick={onClose}
             className={`p-1.5 rounded-full transition-colors cursor-pointer ${
-              isDarkMode ? 'text-white/50 hover:text-white hover:bg-white/10' : 'text-slate-400 hover:text-slate-800 hover:bg-slate-100'
+              isDarkMode ? 'text-slate-400 hover:text-white hover:bg-white/10' : 'text-slate-400 hover:text-slate-800 hover:bg-slate-100'
             }`}
           >
             <X className="w-5 h-5" />
@@ -244,7 +244,7 @@ export const WidgetsDrawer: React.FC<WidgetsDrawerProps> = ({
                     isActive
                       ? 'bg-amber-400 text-neutral-950 font-bold shadow-sm'
                       : isDarkMode
-                      ? 'text-white/70 hover:text-white hover:bg-white/10'
+                      ? 'text-slate-300 hover:text-white hover:bg-white/10'
                       : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
                   }`}
                 >
@@ -257,7 +257,7 @@ export const WidgetsDrawer: React.FC<WidgetsDrawerProps> = ({
         </div>
 
         {/* 工具主体内容区 */}
-        <div className={`flex-1 overflow-y-auto p-5 ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>
+        <div className="flex-1 overflow-y-auto p-5">
           {/* 1. 待办事项 */}
           {activeTab === 'todo' && (
             <div className="space-y-4">
