@@ -194,16 +194,17 @@ export const AddBookmarkModal: React.FC<AddBookmarkModalProps> = ({
                 卡片效果实时预览:
               </span>
               <div
-                className={`flex items-center gap-3 p-3 rounded-2xl shadow-md transition-all ${
-                  size === '1x2' ? 'w-56' : size === '2x2' ? 'w-40 h-40 flex-col justify-center' : 'w-44'
+                className={`flex items-center gap-3 p-3.5 rounded-2xl shadow-md transition-all site-glass ${
+                  isDarkMode ? 'site-glass-dark text-white' : 'site-glass-light text-slate-900'
+                } ${
+                  size === '1x2' ? 'w-56' : size === '2x2' ? 'w-40 h-40 flex-col justify-center' : 'w-48'
                 }`}
-                style={{ backgroundColor: `${bgColor}26` }}
               >
                 <div
-                  className="w-10 h-10 rounded-xl flex items-center justify-center text-white shadow-inner flex-shrink-0 overflow-hidden"
-                  style={{ backgroundColor: bgColor }}
+                  className="w-11 h-11 flex items-center justify-center flex-shrink-0 bg-transparent p-0"
+                  style={{ color: bgColor }}
                 >
-                  <IconRenderer name={icon} url={url} size={20} fallbackText={name} />
+                  <IconRenderer name={icon} url={url} className="w-8 h-8" size={32} fallbackText={name} />
                 </div>
                 <div className="overflow-hidden text-left flex-1 min-w-0">
                   <div

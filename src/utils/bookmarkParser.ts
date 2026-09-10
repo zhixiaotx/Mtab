@@ -2,10 +2,18 @@ import { BookmarkItem, CategoryNode, ImportMode, ImportParseResult, NoteItem, To
 import { getAutoFavicon, getHostname, suggestSiteName } from './favicon';
 
 /**
- * 将平铺的书签列表根据 categoryPath 或 category 构建多级分类树
+ * 将平铺的书签列表根据 categoryPath 或 category 精确构建完整多级分类树
  */
 export function buildCategoryTree(bookmarks: BookmarkItem[]): CategoryNode[] {
-  const rootMap = new Map<string, CategoryNode>();
+  interface InternalNode {
+    name: string;
+    fullPath: string;
+    level: number;
+    categoryPath: string[];
+    childrenMap: Map<string, InternalNode>;
+  }
+
+  const rootMap = new Map<string, InternalNode>();
 
   bookmarks.forEach((item) => {
     // 提取并清洗分类路径数组
@@ -20,59 +28,67 @@ export function buildCategoryTree(bookmarks: BookmarkItem[]): CategoryNode[] {
       path = ['常用'];
     }
 
-    // 确保 item 的规范属性对齐
+    // 规范化设置 item 上的属性
     item.categoryPath = [...path];
     item.category = path.join(' / ');
 
-    let currentChildren = rootMap;
+    let currentMap = rootMap;
     let accumulatedPath: string[] = [];
 
     path.forEach((part, index) => {
       accumulatedPath.push(part);
       const fullPath = accumulatedPath.join(' / ');
 
-      let node = currentChildren.get(part);
+      let node = currentMap.get(part);
       if (!node) {
         node = {
-          id: fullPath,
           name: part,
           fullPath,
           level: index + 1,
           categoryPath: [...accumulatedPath],
-          children: [],
-          count: 0,
+          childrenMap: new Map<string, InternalNode>(),
         };
-        currentChildren.set(part, node);
+        currentMap.set(part, node);
       }
-
-      // 为子层级构造 Map
-      const nextChildren = new Map<string, CategoryNode>();
-      node.children.forEach((c) => nextChildren.set(c.name, c));
-      currentChildren = nextChildren;
+      currentMap = node.childrenMap;
     });
   });
 
-  // 递归计算每个分类节点（及其子节点）包含的书签数量并组装树结构
-  function updateNodeAndChildren(map: Map<string, CategoryNode>): CategoryNode[] {
-    return Array.from(map.values()).map((node) => {
-      const pathPrefix = node.fullPath;
+  // 递归将 InternalNode 树转换为 CategoryNode 数组，并准确计算层级下包含的书签数量
+  function convertToCategoryNodes(map: Map<string, InternalNode>): CategoryNode[] {
+    return Array.from(map.values()).map((internalNode) => {
+      const pathPrefix = internalNode.fullPath;
+
       const matchCount = bookmarks.filter((b) => {
-        const bPath = b.categoryPath ? b.categoryPath.join(' / ') : b.category;
+        const bPath = b.categoryPath && b.categoryPath.length > 0
+          ? b.categoryPath.join(' / ')
+          : b.category;
         return bPath === pathPrefix || bPath.startsWith(pathPrefix + ' / ');
       }).length;
 
-      const childMap = new Map<string, CategoryNode>();
-      node.children.forEach((c) => childMap.set(c.name, c));
+      const children = convertToCategoryNodes(internalNode.childrenMap);
 
       return {
-        ...node,
+        id: internalNode.fullPath,
+        name: internalNode.name,
+        fullPath: internalNode.fullPath,
+        level: internalNode.level,
+        categoryPath: internalNode.categoryPath,
+        children,
         count: matchCount,
-        children: updateNodeAndChildren(childMap),
       };
     });
   }
 
-  return updateNodeAndChildren(rootMap);
+  return convertToCategoryNodes(rootMap);
+}
+
+/**
+ * 判断是否为顶层通用书签栏名称（如 "书签栏", "Bookmarks bar", "收藏夹栏"）
+ */
+function isGenericRootName(name: string): boolean {
+  if (!name) return true;
+  return /^(书签栏|书签菜单|收藏夹栏|bookmarks bar|favorites bar|bookmarks menu|other bookmarks|其他书签|root|bookmarks|收藏夹)$/i.test(name.trim());
 }
 
 /**
@@ -84,10 +100,9 @@ export function parseBookmarkHtml(htmlContent: string): ImportParseResult {
 
   const bookmarks: BookmarkItem[] = [];
   const categoriesSet = new Set<string>();
-  const processedElements = new Set<Element>();
 
-  // 解析单个 <a> 标签链接元素
-  function parseLinkElement(a: Element, parentElement: Element | null, currentPath: string[]) {
+  // 从单个 <a> 标签提取 BookmarkItem
+  function extractBookmarkFromAnchor(a: Element, currentPath: string[]) {
     let url = a.getAttribute('href')?.trim() || '';
     if (!url) return;
 
@@ -96,26 +111,25 @@ export function parseBookmarkHtml(htmlContent: string): ImportParseResult {
       if (/^www\./i.test(url) || /^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/.test(url)) {
         url = 'https://' + url;
       } else {
-        return; // 过滤非标准/内部 URL（如 javascript: 或 chrome://）
+        return; // 过滤 chrome://, javascript: 等非标准 URL
       }
     }
 
     const rawName = a.textContent?.trim() || '';
     const name = rawName || suggestSiteName(url) || getHostname(url) || url;
-    let icon = a.getAttribute('icon') || a.getAttribute('favicon') || '';
 
-    // 核心自动 Logo 获取逻辑：若无 icon、或为默认 Globe、或非 Base64/HTTP，自动域名提取高清 Favicon
+    // 获取 Icon：若缺失或为默认 Globe，自动获取网站高清 Favicon Logo
+    let icon = a.getAttribute('icon') || a.getAttribute('favicon') || '';
     if (!icon || icon === 'Globe' || (!icon.startsWith('data:') && !icon.startsWith('http'))) {
       icon = getAutoFavicon(url) || 'Globe';
     }
 
-    // 提取描述：优先提取 title、comment 属性，或相邻 <DD> 标签
+    // 提取描述：优先 title/comment 属性或相邻 <DD>
     let description = a.getAttribute('title')?.trim() || a.getAttribute('comment')?.trim() || '';
-    if (!description && parentElement) {
-      const dd = parentElement.querySelector(':scope > DD, :scope > dd') ||
-                 (parentElement.nextElementSibling && parentElement.nextElementSibling.tagName.toUpperCase() === 'DD' ? parentElement.nextElementSibling : null);
-      if (dd && dd.textContent) {
-        description = dd.textContent.trim();
+    if (!description && a.parentElement) {
+      let nextSib = a.parentElement.nextElementSibling;
+      if (nextSib && nextSib.tagName.toUpperCase() === 'DD') {
+        description = nextSib.textContent?.trim() || '';
       }
     }
 
@@ -137,132 +151,104 @@ export function parseBookmarkHtml(htmlContent: string): ImportParseResult {
     });
   }
 
-  // 递归解析 DL / UL 容器中的 H3 (文件夹) 与 A (书签)
-  function parseContainer(container: Element, currentPath: string[]) {
-    processedElements.add(container);
+  // 递归 DOM 节点解析容器 (DL/UL/DT/LI)
+  function parseContainerElement(container: Element, currentPath: string[]) {
     const children = Array.from(container.children);
 
     for (let i = 0; i < children.length; i++) {
       const child = children[i];
-      if (processedElements.has(child)) continue;
+      const tag = child.tagName.toUpperCase();
 
-      const tagName = child.tagName.toUpperCase();
+      if (tag === 'A') {
+        extractBookmarkFromAnchor(child, currentPath);
+      } else if (tag === 'DL' || tag === 'UL') {
+        // 寻找此 DL 之前的 H3 文件夹名称
+        let folderName = '';
+        let prev = child.previousElementSibling;
+        if (prev) {
+          if (prev.tagName.toUpperCase() === 'H3') {
+            folderName = prev.textContent?.trim() || '';
+          } else {
+            const h3InPrev = prev.querySelector('h3, H3');
+            if (h3InPrev) folderName = h3InPrev.textContent?.trim() || '';
+          }
+        }
+        if (!folderName && child.parentElement) {
+          const h3InParent = child.parentElement.querySelector(':scope > h3, :scope > H3');
+          if (h3InParent) folderName = h3InParent.textContent?.trim() || '';
+        }
 
-      if (tagName === 'DT' || tagName === 'LI' || tagName === 'P') {
-        processedElements.add(child);
+        let nextPath = currentPath;
+        if (folderName) {
+          if (isGenericRootName(folderName) && currentPath.length === 0) {
+            nextPath = [];
+          } else {
+            nextPath = [...currentPath, folderName];
+          }
+        }
 
-        // 检查 DT 中是否包含 H3 (文件夹)
-        const h3 = child.querySelector(':scope > H3, :scope > h3') || (child.tagName === 'H3' ? child : null);
-        const a = child.querySelector(':scope > A, :scope > a');
+        parseContainerElement(child, nextPath);
+      } else if (tag === 'DT' || tag === 'LI' || tag === 'P') {
+        // 解析 DT/LI/P 节点下的直属 A 标签
+        const directAnchors = child.querySelectorAll(':scope > a, :scope > A');
+        directAnchors.forEach((a) => extractBookmarkFromAnchor(a, currentPath));
 
-        if (h3) {
-          const folderName = h3.textContent?.trim() || '未命名文件夹';
-          // 忽略顶层通用书签栏无用名称（如 "书签栏", "Bookmarks bar", "收藏夹栏"）
-          const isGenericRoot = /^(书签栏|书签菜单|收藏夹栏|bookmarks bar|favorites bar|bookmarks menu|other bookmarks|其他书签|root)$/i.test(folderName);
-          const nextPath = (isGenericRoot && currentPath.length === 0) ? [] : [...currentPath, folderName];
+        // 如果 DT/LI/P 不含直属 A 标签，但也包含子 A 标签 (未嵌套在 DL 中)
+        if (directAnchors.length === 0) {
+          const innerAnchors = Array.from(child.querySelectorAll('a, A')).filter(
+            (a) => !a.parentElement?.closest('dl, DL, ul, UL')
+          );
+          innerAnchors.forEach((a) => extractBookmarkFromAnchor(a, currentPath));
+        }
 
-          // 寻找该文件夹对应的子 DL 容器（核心：防二次遍历关键）
-          let subContainer = child.querySelector(':scope > DL, :scope > dl, :scope > UL, :scope > ul');
-          if (!subContainer) {
-            let sib = child.nextElementSibling;
-            while (sib) {
-              const sibTag = sib.tagName.toUpperCase();
-              if (sibTag === 'DL' || sibTag === 'UL') {
-                subContainer = sib;
-                break;
+        // 解析 DT/LI/P 中的子 DL/UL 文件夹
+        const innerDls = child.querySelectorAll(':scope > dl, :scope > DL, :scope > ul, :scope > UL');
+        if (innerDls.length > 0) {
+          innerDls.forEach((dl) => {
+            let folderName = '';
+            const h3 = child.querySelector(':scope > h3, :scope > H3') || child.querySelector('h3, H3');
+            if (h3) folderName = h3.textContent?.trim() || '';
+
+            let nextPath = currentPath;
+            if (folderName) {
+              if (isGenericRootName(folderName) && currentPath.length === 0) {
+                nextPath = [];
+              } else {
+                nextPath = [...currentPath, folderName];
               }
-              if (sibTag === 'DT' || sibTag === 'H3' || sibTag === 'A') {
-                break;
-              }
-              sib = sib.nextElementSibling;
             }
-          }
 
-          if (subContainer) {
-            parseContainer(subContainer, nextPath);
-          }
-        }
-
-        if (a) {
-          parseLinkElement(a, child, currentPath);
-        }
-
-        // 某些嵌套 DL 结构的追加解析
-        const innerDl = child.querySelector(':scope > DL, :scope > dl, :scope > UL, :scope > ul');
-        if (innerDl && !processedElements.has(innerDl)) {
-          parseContainer(innerDl, currentPath);
-        }
-      } else if (tagName === 'DL' || tagName === 'UL') {
-        parseContainer(child, currentPath);
-      } else if (tagName === 'A') {
-        parseLinkElement(child, child.parentElement, currentPath);
-      } else if (tagName === 'H3') {
-        const folderName = child.textContent?.trim() || '未命名文件夹';
-        const isGenericRoot = /^(书签栏|书签菜单|收藏夹栏|bookmarks bar|favorites bar|bookmarks menu|other bookmarks|其他书签|root)$/i.test(folderName);
-        const nextPath = (isGenericRoot && currentPath.length === 0) ? [] : [...currentPath, folderName];
-
-        let sib = child.nextElementSibling;
-        while (sib) {
-          const sibTag = sib.tagName.toUpperCase();
-          if (sibTag === 'DL' || sibTag === 'UL') {
-            parseContainer(sib, nextPath);
-            break;
-          }
-          if (sibTag === 'H3') break;
-          sib = sib.nextElementSibling;
+            parseContainerElement(dl, nextPath);
+          });
         }
       }
     }
   }
 
-  // 1. 优先尝试从 DL/UL 根节点递归解析
-  const rootContainers = doc.querySelectorAll('body > dl, body > DL, body > ul, body > UL, dl, DL, ul, UL');
-  if (rootContainers.length > 0) {
-    rootContainers.forEach((cont) => {
-      if (!processedElements.has(cont)) {
-        parseContainer(cont, []);
-      }
-    });
+  // 1. 寻找顶层 DL/UL (无外层 DL/UL 包裹的根容器)
+  const allDls = Array.from(doc.querySelectorAll('dl, DL, ul, UL'));
+  const topDls = allDls.filter((dl) => !dl.parentElement?.closest('dl, DL, ul, UL'));
+
+  if (topDls.length > 0) {
+    topDls.forEach((dl) => parseContainerElement(dl, []));
+  } else {
+    parseContainerElement(doc.body, []);
   }
 
-  // 2. 降级模式：若非标准 HTML，则顺序扫描 H3 目录与 A 链接
+  // 2. 备用模式：若上述解析未提取到书签，按 DOM 顺序匹配 H3 与 A 标签
   if (bookmarks.length === 0) {
     let currentScanPath: string[] = [];
-    const allNodes = doc.querySelectorAll('h3, H3, a, A');
+    const allElements = doc.querySelectorAll('h3, H3, a, A');
 
-    allNodes.forEach((node) => {
+    allElements.forEach((node) => {
       const tag = node.tagName.toUpperCase();
       if (tag === 'H3') {
-        const fName = node.textContent?.trim();
-        if (fName && !/^(书签栏|bookmarks bar|收藏夹栏)$/i.test(fName)) {
-          currentScanPath = [fName];
+        const text = node.textContent?.trim();
+        if (text && !isGenericRootName(text)) {
+          currentScanPath = [text];
         }
       } else if (tag === 'A') {
-        let url = node.getAttribute('href')?.trim() || '';
-        if (url) {
-          if (!/^https?:\/\//i.test(url) && /^www\./i.test(url)) url = 'https://' + url;
-          if (/^https?:\/\//i.test(url)) {
-            const name = node.textContent?.trim() || suggestSiteName(url) || url;
-            let icon = node.getAttribute('icon') || getAutoFavicon(url) || 'Globe';
-            const description = node.getAttribute('title')?.trim() || node.getAttribute('comment')?.trim() || '';
-            const categoryPath = currentScanPath.length > 0 ? [...currentScanPath] : ['导入书签'];
-            const category = categoryPath.join(' / ');
-            categoriesSet.add(category);
-
-            bookmarks.push({
-              id: `bm_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
-              name,
-              url,
-              icon,
-              category,
-              categoryPath,
-              bgColor: getColorByString(name),
-              size: '1x1',
-              sort: bookmarks.length + 1,
-              description,
-            });
-          }
-        }
+        extractBookmarkFromAnchor(node, currentScanPath);
       }
     });
   }
@@ -280,7 +266,7 @@ export function parseBookmarkHtml(htmlContent: string): ImportParseResult {
 }
 
 /**
- * 解析通用 JSON 配置文件或各浏览器/延伸工具导出的 JSON 书签数据
+ * 解析通用 JSON 配置文件或各浏览器/衍生工具导出的 JSON 书签数据
  */
 export function parseBookmarkJson(jsonContent: string): ImportParseResult {
   let parsed: any;
@@ -342,7 +328,7 @@ export function parseBookmarkJson(jsonContent: string): ImportParseResult {
       categoryPath,
       size: obj.size || '1x1',
       description: obj.description || obj.comment || obj.notes || '',
-      sort: typeof obj.sort === 'number' ? obj.sort : bookmarks.length + 1,
+      sort: bookmarks.length + 1,
     };
   }
 
@@ -362,11 +348,21 @@ export function parseBookmarkJson(jsonContent: string): ImportParseResult {
         bookmarks.push(bm);
       }
 
-      // 2. 检查是否有子节点列表 (children, items, nodes, bookmarks, subfolders)
-      const children = node.children || node.items || node.nodes || node.bookmarks || node.subfolders || node.sons;
+      // 2. 检查是否有子节点列表 (children, items, nodes, bookmarks, links, data, subfolders, sons 等)
+      const children =
+        node.children ||
+        node.items ||
+        node.nodes ||
+        node.bookmarks ||
+        node.links ||
+        node.data ||
+        node.subfolders ||
+        node.sons ||
+        node.childrens;
+
       if (Array.isArray(children)) {
         const folderName = (node.title || node.name || node.text || node.label || '').trim();
-        const isGenericRoot = !folderName || /^(书签栏|bookmarks bar|收藏夹栏|favorites bar|bookmarks menu|other bookmarks|其他书签|root)$/i.test(folderName);
+        const isGenericRoot = !folderName || isGenericRootName(folderName);
         const nextPath = (isGenericRoot && currentPath.length === 0) ? currentPath : (folderName ? [...currentPath, folderName] : currentPath);
 
         children.forEach((child) => traverseJsonTree(child, nextPath));
@@ -374,15 +370,15 @@ export function parseBookmarkJson(jsonContent: string): ImportParseResult {
     }
   }
 
-  // 1. 形式 A: Mtab 备份文件 (包含 config, bookmarks, notes, todos)
-  if (parsed.bookmarks && Array.isArray(parsed.bookmarks)) {
-    parsed.bookmarks.forEach((item: any) => {
-      const bm = extractBookmarkFromObject(item, []);
-      if (bm) bookmarks.push(bm);
+  // 1. 形式 A: Mtab / Cloudflare 完整备份文件 (包含 config, bookmarks / links / data, notes, todos)
+  const topArray = parsed.bookmarks || parsed.links || parsed.data || parsed.items || parsed.list;
+  if (Array.isArray(topArray)) {
+    topArray.forEach((item: any) => {
+      traverseJsonTree(item, []);
     });
     config = parsed.config;
-    notes = parsed.notes;
-    todos = parsed.todos;
+    notes = parsed.notes || parsed.noteList;
+    todos = parsed.todos || parsed.todoList;
   }
   // 2. 形式 B: Chrome 浏览器 Roots 书签 JSON (parsed.roots)
   else if (parsed.roots) {
@@ -410,7 +406,7 @@ export function parseBookmarkJson(jsonContent: string): ImportParseResult {
     todos,
     totalBookmarks: bookmarks.length,
     totalCategories: categoriesSet.size,
-    sourceType: parsed.bookmarks ? 'json_config' : 'json_bookmarks',
+    sourceType: (parsed.bookmarks || parsed.links) ? 'json_config' : 'json_bookmarks',
   };
 }
 
@@ -423,24 +419,37 @@ export function mergeBookmarks(
   mode: ImportMode
 ): BookmarkItem[] {
   if (mode === 'overwrite') {
-    return incoming;
+    // 完全覆盖：重置 sort 序号为 1, 2, 3...，保证排列顺序与导入文件完全一致
+    return incoming.map((bm, index) => ({
+      ...bm,
+      sort: index + 1,
+    }));
   }
 
-  // 增量合并 (按 URL 去重并补充更新多级分类与 Logo)
+  // 增量合并：按 URL 去重并更新已存在网址的信息；新增网址与模块整体排列在原有所有网址模块后面
   const mapByUrl = new Map<string, BookmarkItem>();
-  existing.forEach((item) => {
+
+  // 1. 保留所有现有书签的相对位置与数据
+  const merged: BookmarkItem[] = existing.map((item, idx) => {
     const key = normalizeUrl(item.url);
-    mapByUrl.set(key, item);
+    const itemCopy = {
+      ...item,
+      sort: typeof item.sort === 'number' && item.sort > 0 ? item.sort : idx + 1,
+    };
+    mapByUrl.set(key, itemCopy);
+    return itemCopy;
   });
 
-  const merged = [...existing];
+  // 2. 计算现有书签中的最大 sort 序号，作为后续新卡片/模块追加的起始点
+  let maxSort = merged.reduce((max, b) => Math.max(max, b.sort || 0), 0);
 
+  // 3. 遍历待导入的新书签（保持文件原有层级与顺序）
   incoming.forEach((newItem) => {
     const key = normalizeUrl(newItem.url);
     const existItem = mapByUrl.get(key);
 
     if (existItem) {
-      // 存在相同 URL，补充更新多级分类、描述与 Icon
+      // 若原网页库中已存在该 URL，在原位置补充更新分类路径、描述与 Icon（不移动其原有显示顺序）
       if (newItem.categoryPath && newItem.categoryPath.length > 0) {
         existItem.categoryPath = newItem.categoryPath;
         existItem.category = newItem.category;
@@ -452,8 +461,15 @@ export function mergeBookmarks(
         existItem.icon = newItem.icon;
       }
     } else {
-      merged.push(newItem);
-      mapByUrl.set(key, newItem);
+      // 若为全新网址卡片，整体排列在原有所有网址卡片/模块的后面
+      maxSort += 1;
+      const appendedItem: BookmarkItem = {
+        ...newItem,
+        id: newItem.id || `bm_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
+        sort: maxSort,
+      };
+      merged.push(appendedItem);
+      mapByUrl.set(key, appendedItem);
     }
   });
 

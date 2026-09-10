@@ -17,7 +17,7 @@ interface SortableBookmarkCardProps {
   isOverlay?: boolean;
 }
 
-export const SortableBookmarkCard: React.FC<SortableBookmarkCardProps> = ({
+export const SortableBookmarkCard = React.memo<SortableBookmarkCardProps>(({
   item,
   config,
   isDarkMode = true,
@@ -90,12 +90,12 @@ export const SortableBookmarkCard: React.FC<SortableBookmarkCardProps> = ({
         <GripVertical className="w-3.5 h-3.5" />
       </div>
 
-      {/* Logo 图标 (居左，无矩形填充，纯净品牌原标) */}
+      {/* Logo 图标 (居左，无矩形填充，全透明，尺寸调大) */}
       <div
-        className="w-10 h-10 flex items-center justify-center flex-shrink-0 transition-transform group-hover:scale-110 drop-shadow-sm"
+        className="w-11 h-11 sm:w-12 sm:h-12 flex items-center justify-center flex-shrink-0 transition-transform group-hover:scale-110 bg-transparent p-0"
         style={{ color: item.bgColor || (isDarkMode ? '#fbbf24' : '#2563eb') }}
       >
-        <IconRenderer name={item.icon} url={item.url} size={26} fallbackText={item.name} />
+        <IconRenderer name={item.icon} url={item.url} className="w-8 h-8 sm:w-9 sm:h-9" size={36} fallbackText={item.name} />
       </div>
 
       {/* 网址名称与描述 (Logo 右边) */}
@@ -164,4 +164,4 @@ export const SortableBookmarkCard: React.FC<SortableBookmarkCardProps> = ({
       )}
     </div>
   );
-};
+});

@@ -13,8 +13,8 @@ interface IconRendererProps {
 export const IconRenderer: React.FC<IconRendererProps> = ({
   name,
   url,
-  className = 'w-6 h-6',
-  size = 24,
+  className = 'w-8 h-8',
+  size = 32,
   fallbackText,
 }) => {
   const [attempt, setAttempt] = useState<number>(0);
@@ -30,7 +30,7 @@ export const IconRenderer: React.FC<IconRendererProps> = ({
             <img
               src={`https://www.google.com/s2/favicons?domain=${encodeURIComponent(domain)}&sz=128`}
               alt=""
-              className={`${className} object-contain rounded-md`}
+              className={`${className} object-contain bg-transparent`}
               onError={() => setAttempt(2)}
             />
           );
@@ -48,7 +48,7 @@ export const IconRenderer: React.FC<IconRendererProps> = ({
       <img
         src={name}
         alt=""
-        className={`${className} object-contain rounded-md`}
+        className={`${className} object-contain bg-transparent`}
         onError={() => setAttempt(1)}
       />
     );
@@ -73,7 +73,7 @@ export const IconRenderer: React.FC<IconRendererProps> = ({
           <img
             src={primaryUrl}
             alt=""
-            className={`${className} object-contain rounded-md`}
+            className={`${className} object-contain bg-transparent`}
             onError={() => setAttempt(1)}
           />
         );
@@ -84,7 +84,7 @@ export const IconRenderer: React.FC<IconRendererProps> = ({
           <img
             src={fallbackUrl}
             alt=""
-            className={`${className} object-contain rounded-md`}
+            className={`${className} object-contain bg-transparent`}
             onError={() => setAttempt(2)}
           />
         );
@@ -95,7 +95,7 @@ export const IconRenderer: React.FC<IconRendererProps> = ({
           <img
             src={ddgUrl}
             alt=""
-            className={`${className} object-contain rounded-md`}
+            className={`${className} object-contain bg-transparent`}
             onError={() => setAttempt(3)}
           />
         );

@@ -368,7 +368,7 @@ export const DataManagementModal: React.FC<DataManagementModalProps> = ({
                           <span className="text-[10px] px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-400 font-medium">推荐</span>
                         </div>
                         <div className={`text-xs mt-1 ${isDarkMode ? 'text-white/60' : 'text-slate-500'}`}>
-                          保留您原有的快捷导航，按 URL 去重并补充合并新书签与多级分类。
+                          保留您原有的网站模块与显示顺序，按 URL 去重；新增加的网站模块与卡片将排列在原有网址模块的后面。
                         </div>
                       </div>
                     </div>

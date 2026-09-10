@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import {
   MtabConfig, BookmarkItem, NoteItem, TodoItem, CloudflareConfig,
   CloudflareStatusResponse, WeatherData, ImportMode
@@ -165,10 +165,12 @@ export default function App() {
     });
   };
 
-  // 提取分类列表
-  const categories = Array.from(
-    new Set(['全部', ...DEFAULT_CATEGORIES, ...bookmarks.map((b) => b.category).filter(Boolean)])
-  );
+  // 提取分类列表 (useMemo 性能优化)
+  const categories = useMemo(() => {
+    return Array.from(
+      new Set(['全部', ...DEFAULT_CATEGORIES, ...bookmarks.map((b) => b.category).filter(Boolean)])
+    );
+  }, [bookmarks]);
 
   // 本地缓存持久化
   useEffect(() => {
@@ -403,6 +405,7 @@ export default function App() {
     mode?: ImportMode
   ) => {
     setBookmarks(newBookmarks);
+    setActiveCategory('全部');
     if (newConfig) {
       setConfig((prev) => ({
         ...prev,
