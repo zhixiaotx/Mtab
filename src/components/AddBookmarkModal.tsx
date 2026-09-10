@@ -145,8 +145,8 @@ export const AddBookmarkModal: React.FC<AddBookmarkModalProps> = ({
       <div
         className={`relative w-full max-w-2xl max-h-[88vh] rounded-3xl site-glass border-0 shadow-2xl flex flex-col overflow-hidden animate-in zoom-in-95 duration-150 dark:text-slate-200 text-slate-800 ${
           isDarkMode
-            ? 'bg-neutral-900/90 shadow-black/60'
-            : 'bg-white/90 shadow-slate-900/20'
+            ? 'site-glass-dark shadow-black/60'
+            : 'site-glass-light shadow-slate-900/20'
         }`}
       >
         {/* 统一顶部标题栏 */}

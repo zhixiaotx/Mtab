@@ -19,9 +19,21 @@
   scrollbar-width: none;
 }
 
-/* 整站动态毛玻璃样式 (可由设置中的滑块实时调节) */
+/* 整站动态毛玻璃与通透度样式 (由设置滑块 --glass-blur 与 --glass-opacity 实时联动控制) */
 .site-glass {
-  backdrop-filter: blur(var(--glass-blur, 16px));
-  -webkit-backdrop-filter: blur(var(--glass-blur, 16px));
+  backdrop-filter: blur(var(--glass-blur, 16px)) !important;
+  -webkit-backdrop-filter: blur(var(--glass-blur, 16px)) !important;
+}
+
+.site-glass-dark {
+  backdrop-filter: blur(var(--glass-blur, 16px)) !important;
+  -webkit-backdrop-filter: blur(var(--glass-blur, 16px)) !important;
+  background-color: var(--glass-bg-dark, rgba(15, 23, 42, 0.75)) !important;
+}
+
+.site-glass-light {
+  backdrop-filter: blur(var(--glass-blur, 16px)) !important;
+  -webkit-backdrop-filter: blur(var(--glass-blur, 16px)) !important;
+  background-color: var(--glass-bg-light, rgba(255, 255, 255, 0.85)) !important;
 }
 

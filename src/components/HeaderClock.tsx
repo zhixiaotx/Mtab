@@ -74,8 +74,8 @@ export const HeaderClock: React.FC<HeaderClockProps> = ({
 
   const buttonBaseClass = `flex items-center gap-1.5 px-3 py-1.5 rounded-full site-glass border-0 text-xs font-medium shadow-md transition-all duration-200 cursor-pointer hover:scale-105 active:scale-95 ${
     isDarkMode
-      ? 'bg-black/40 text-white/90 hover:bg-black/60 shadow-black/30'
-      : 'bg-white/60 text-slate-800 hover:bg-white/80 shadow-slate-900/10'
+      ? 'site-glass-dark text-white/90 shadow-black/30'
+      : 'site-glass-light text-slate-800 shadow-slate-900/10'
   }`;
 
   return (
@@ -87,8 +87,8 @@ export const HeaderClock: React.FC<HeaderClockProps> = ({
           <div
             className={`flex items-center gap-2 px-3 py-1.5 rounded-full site-glass border-0 text-xs font-medium shadow-md ${
               isDarkMode
-                ? 'bg-black/40 text-white/90 shadow-black/30'
-                : 'bg-white/60 text-slate-800 shadow-slate-900/10'
+                ? 'site-glass-dark text-white/90 shadow-black/30'
+                : 'site-glass-light text-slate-800 shadow-slate-900/10'
             }`}
           >
             <span className="font-bold tracking-wider text-amber-500">MTAB</span>
@@ -182,8 +182,8 @@ export const HeaderClock: React.FC<HeaderClockProps> = ({
             onClick={toggleFullscreen}
             className={`p-1.5 rounded-full site-glass border-0 transition-all duration-200 cursor-pointer hover:scale-105 active:scale-95 shadow-md ${
               isDarkMode
-                ? 'bg-black/40 text-white/80 hover:bg-black/60 hover:text-white shadow-black/30'
-                : 'bg-white/60 text-slate-700 hover:bg-white/80 hover:text-slate-950 shadow-slate-900/10'
+                ? 'site-glass-dark text-white/80 hover:text-white shadow-black/30'
+                : 'site-glass-light text-slate-700 hover:text-slate-950 shadow-slate-900/10'
             }`}
             title={isFullscreen ? '退出全屏' : '全屏沉浸'}
           >

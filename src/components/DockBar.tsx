@@ -38,10 +38,10 @@ export const DockBar: React.FC<DockBarProps> = ({
     <nav aria-label="快捷工具栏" className="fixed bottom-3 sm:bottom-5 left-1/2 -translate-x-1/2 z-30 select-none max-w-[96vw]">
       {/* 圆角矩形胶囊 Dock 栏 (毛玻璃质感，无矩形填充图标) */}
       <div
-        className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full site-glass transition-all duration-200 overflow-x-auto scrollbar-none ${
+        className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full site-glass border-0 transition-all duration-200 overflow-x-auto scrollbar-none ${
           isDarkMode
-            ? 'bg-neutral-950/75 border border-white/10 text-white shadow-2xl shadow-black/40'
-            : 'bg-white/90 border border-slate-200/80 text-slate-800 shadow-xl shadow-slate-900/15'
+            ? 'site-glass-dark text-white shadow-2xl shadow-black/40'
+            : 'site-glass-light text-slate-800 shadow-xl shadow-slate-900/15'
         }`}
       >
         {/* Cloudflare 数据库与同步 */}

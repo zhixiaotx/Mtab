@@ -83,6 +83,28 @@ export const WidgetsDrawer: React.FC<WidgetsDrawerProps> = ({
   const [todoFolder, setTodoFolder] = useState<'today' | 'week' | 'all'>('today');
   const [todoPriority, setTodoPriority] = useState<'low' | 'medium' | 'high'>('medium');
 
+  const filteredTodos = todos.filter((t) => {
+    if (todoFolder === 'all') return true;
+    if (todoFolder === 'today') {
+      if (t.folder) return t.folder === 'today';
+      if (t.createdAt) {
+        const todayStr = new Date().toDateString();
+        const itemStr = new Date(t.createdAt).toDateString();
+        return todayStr === itemStr;
+      }
+      return true;
+    }
+    if (todoFolder === 'week') {
+      if (t.folder) return t.folder === 'week' || t.folder === 'today';
+      if (t.createdAt) {
+        const diffDays = (Date.now() - t.createdAt) / (1000 * 3600 * 24);
+        return diffDays <= 7;
+      }
+      return true;
+    }
+    return true;
+  });
+
   const handleAddTodo = (e: React.FormEvent) => {
     e.preventDefault();
     if (!newTodoText.trim()) return;
@@ -190,10 +212,10 @@ export const WidgetsDrawer: React.FC<WidgetsDrawerProps> = ({
   return (
     <div className="fixed inset-0 z-50 flex justify-end bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
       <div
-        className={`w-full max-w-xl h-full shadow-2xl flex flex-col animate-in slide-in-from-right duration-300 dark:text-slate-200 text-slate-800 ${
+        className={`w-full max-w-xl h-full site-glass border-0 shadow-2xl flex flex-col animate-in slide-in-from-right duration-300 dark:text-slate-200 text-slate-800 ${
           isDarkMode
-            ? 'bg-neutral-900/95 backdrop-blur-2xl border-l border-white/10'
-            : 'bg-white/95 backdrop-blur-2xl border-l border-slate-200'
+            ? 'site-glass-dark'
+            : 'site-glass-light'
         }`}
       >
         {/* 顶部标题与关闭 */}
@@ -281,7 +303,7 @@ export const WidgetsDrawer: React.FC<WidgetsDrawerProps> = ({
                   ))}
                 </div>
                 <span className={`text-xs ${isDarkMode ? 'text-white/50' : 'text-slate-500'}`}>
-                  {todos.filter((t) => !t.completed).length} 个未完成
+                  {filteredTodos.filter((t) => !t.completed).length} 个未完成
                 </span>
               </div>
 
@@ -321,7 +343,15 @@ export const WidgetsDrawer: React.FC<WidgetsDrawerProps> = ({
 
               {/* 待办列表 */}
               <div className="space-y-2">
-                {todos.map((t) => (
+                {filteredTodos.length === 0 ? (
+                  <div className={`p-8 text-center rounded-2xl border border-dashed ${
+                    isDarkMode ? 'border-white/10 text-white/40' : 'border-slate-200 text-slate-400'
+                  }`}>
+                    <CheckSquare className="w-8 h-8 mx-auto mb-2 opacity-40" />
+                    <p className="text-xs">暂无{todoFolder === 'today' ? '今日' : todoFolder === 'week' ? '七天内' : ''}待办事项</p>
+                  </div>
+                ) : (
+                  filteredTodos.map((t) => (
                   <div
                     key={t.id}
                     className={`flex items-center justify-between p-3 rounded-xl border transition-all ${
@@ -377,7 +407,7 @@ export const WidgetsDrawer: React.FC<WidgetsDrawerProps> = ({
                       </button>
                     </div>
                   </div>
-                ))}
+                )))}
               </div>
             </div>
           )}

@@ -457,6 +457,8 @@ export default function App() {
       style={{
         ['--glass-blur' as any]: `${config.theme.glassBlur ?? 16}px`,
         ['--glass-opacity' as any]: `${config.theme.glassOpacity ?? 0.65}`,
+        ['--glass-bg-dark' as any]: `rgba(15, 23, 42, ${config.theme.glassOpacity ?? 0.75})`,
+        ['--glass-bg-light' as any]: `rgba(255, 255, 255, ${config.theme.glassOpacity ?? 0.85})`,
       }}
     >
       {/* 动态壁纸背景容器 */}
@@ -564,8 +566,8 @@ export default function App() {
           onClick={handleToggleThemeMode}
           className={`w-12 h-12 rounded-full flex items-center justify-center site-glass border-0 transition-all duration-200 cursor-pointer shadow-xl hover:scale-110 active:scale-95 ${
             isDarkMode
-              ? 'bg-black/40 hover:bg-black/60 text-amber-300 shadow-black/40'
-              : 'bg-white/60 hover:bg-white/80 text-indigo-600 shadow-slate-900/15'
+              ? 'site-glass-dark text-amber-300 shadow-black/40'
+              : 'site-glass-light text-indigo-600 shadow-slate-900/15'
           }`}
           title={isDarkMode ? '切换至白昼模式 (白天)' : '切换至暗夜模式 (黑夜)'}
         >
@@ -583,8 +585,8 @@ export default function App() {
               : 'opacity-0 translate-y-3 pointer-events-none hidden'
           } ${
             isDarkMode
-              ? 'bg-black/40 hover:bg-black/60 text-white hover:text-amber-300 shadow-black/40'
-              : 'bg-white/60 hover:bg-white/80 text-slate-700 hover:text-amber-600 shadow-slate-900/15'
+              ? 'site-glass-dark text-white hover:text-amber-300 shadow-black/40'
+              : 'site-glass-light text-slate-700 hover:text-amber-600 shadow-slate-900/15'
           }`}
           title="一键平滑置顶"
         >

@@ -178,8 +178,8 @@ export const BookmarkGrid: React.FC<BookmarkGridProps> = ({
         {/* 一级分类滑动条 */}
         <div className="overflow-x-auto pb-1 scrollbar-none flex-1">
           <div
-            className={`inline-flex items-center gap-1.5 p-1 rounded-2xl site-glass shadow-lg ${
-              isDarkMode ? 'bg-neutral-950/70 border border-white/10 shadow-black/40' : 'bg-white/85 border border-slate-200/80 shadow-slate-900/10'
+            className={`inline-flex items-center gap-1.5 p-1 rounded-2xl site-glass border-0 shadow-lg ${
+              isDarkMode ? 'site-glass-dark shadow-black/40' : 'site-glass-light shadow-slate-900/10'
             }`}
           >
             {/* 全部选项 */}
@@ -246,8 +246,8 @@ export const BookmarkGrid: React.FC<BookmarkGridProps> = ({
         <div className="flex items-center gap-2 self-end sm:self-auto flex-shrink-0">
           {/* 模式切换：多级小节 (NavSection) / 紧凑平铺 (Grid) */}
           <div
-            className={`flex items-center p-1 rounded-xl site-glass text-xs shadow-md ${
-              isDarkMode ? 'bg-neutral-950/70 border border-white/10 text-white/80 shadow-black/30' : 'bg-white/85 border border-slate-200/80 text-slate-800 shadow-slate-900/10'
+            className={`flex items-center p-1 rounded-xl site-glass border-0 text-xs shadow-md ${
+              isDarkMode ? 'site-glass-dark text-white/80 shadow-black/30' : 'site-glass-light text-slate-800 shadow-slate-900/10'
             }`}
           >
             <button
@@ -303,12 +303,12 @@ export const BookmarkGrid: React.FC<BookmarkGridProps> = ({
               key={subNode.id}
               type="button"
               onClick={() => onSelectCategory(subNode.fullPath)}
-              className={`flex items-center gap-1 px-3 py-1 rounded-xl text-xs transition-all cursor-pointer whitespace-nowrap border shadow-sm backdrop-blur-md ${
+              className={`flex items-center gap-1 px-3 py-1 rounded-xl text-xs transition-all cursor-pointer whitespace-nowrap site-glass border-0 shadow-sm ${
                 activeCategory === subNode.fullPath
-                  ? 'bg-amber-400 text-neutral-950 font-bold border-amber-400 shadow'
+                  ? 'bg-amber-400 text-neutral-950 font-bold shadow'
                   : isDarkMode
-                  ? 'bg-neutral-900/90 text-white font-medium border-white/20 hover:bg-neutral-800'
-                  : 'bg-white/95 text-slate-900 font-semibold border-slate-300 hover:bg-white'
+                  ? 'site-glass-dark text-white font-medium hover:text-amber-300'
+                  : 'site-glass-light text-slate-900 font-semibold hover:text-amber-600'
               }`}
             >
               <span>{subNode.name}</span>

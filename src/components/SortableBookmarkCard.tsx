@@ -73,12 +73,12 @@ export const SortableBookmarkCard: React.FC<SortableBookmarkCardProps> = ({
           onCardClick(e, item);
         }
       }}
-      className={`group relative flex items-center gap-3 p-3.5 transition-all duration-200 cursor-pointer select-none ${
+      className={`group relative flex items-center gap-3 p-3.5 transition-all duration-200 cursor-pointer select-none site-glass ${
         isOverlay ? 'ring-2 ring-amber-400 z-50' : 'hover:-translate-y-0.5 hover:scale-[1.02] shadow-lg hover:shadow-2xl'
       } ${getRadiusClass()} ${
         isDarkMode
-          ? 'bg-neutral-900/90 hover:bg-neutral-900 text-white border border-white/20 shadow-black/50 backdrop-blur-xl'
-          : 'bg-white/95 hover:bg-white text-slate-900 border border-slate-300/90 shadow-slate-900/15 backdrop-blur-xl'
+          ? 'site-glass-dark text-white border-0 shadow-black/50'
+          : 'site-glass-light text-slate-900 border-0 shadow-slate-900/15'
       } ${isBanner ? 'col-span-2 sm:col-span-2' : isLarge ? 'col-span-2 row-span-2' : ''}`}
     >
       {/* 拖拽把手微提示 (悬停时微现) */}

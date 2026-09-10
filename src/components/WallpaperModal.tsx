@@ -48,10 +48,10 @@ export const WallpaperModal: React.FC<WallpaperModalProps> = ({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/65 backdrop-blur-md animate-in fade-in duration-200">
       <div
-        className={`relative w-full max-w-2xl max-h-[88vh] rounded-3xl shadow-2xl flex flex-col overflow-hidden animate-in zoom-in-95 duration-150 dark:text-slate-200 text-slate-800 ${
+        className={`relative w-full max-w-2xl max-h-[88vh] rounded-3xl site-glass border-0 shadow-2xl flex flex-col overflow-hidden animate-in zoom-in-95 duration-150 dark:text-slate-200 text-slate-800 ${
           isDarkMode
-            ? 'bg-neutral-900/95 backdrop-blur-2xl shadow-black/60'
-            : 'bg-white/95 backdrop-blur-2xl shadow-slate-900/20'
+            ? 'site-glass-dark shadow-black/60'
+            : 'site-glass-light shadow-slate-900/20'
         }`}
       >
         {/* 统一顶部标题栏 */}

@@ -722,14 +722,14 @@ export const SearchBar: React.FC<SearchBarProps> = ({
     <div ref={containerRef} className="w-full max-w-2xl px-4 my-4 relative z-20">
       {/* 圆角矩形胶囊搜索栏 (统一纯净毛玻璃) */}
       <div
-        className={`flex items-center w-full h-13 sm:h-14 rounded-full p-1.5 site-glass transition-all duration-300 shadow-xl ${
+        className={`flex items-center w-full h-13 sm:h-14 rounded-full p-1.5 site-glass transition-all duration-300 shadow-xl border-0 ${
           isDarkMode
             ? isFocused
-              ? 'bg-neutral-950/85 border border-amber-400/50 ring-2 ring-amber-400/35 shadow-2xl shadow-black/60'
-              : 'bg-neutral-950/70 border border-white/10 hover:bg-neutral-950/85 shadow-black/40'
+              ? 'site-glass-dark ring-2 ring-amber-400/35 shadow-2xl shadow-black/60'
+              : 'site-glass-dark shadow-black/40'
             : isFocused
-            ? 'bg-white/95 border border-amber-500/50 ring-2 ring-amber-500/35 shadow-xl shadow-slate-900/15'
-            : 'bg-white/90 border border-slate-200/80 hover:bg-white shadow-slate-900/10'
+            ? 'site-glass-light ring-2 ring-amber-500/35 shadow-xl shadow-slate-900/15'
+            : 'site-glass-light shadow-slate-900/10'
         }`}
       >
         {/* 搜索引擎切换胶囊按钮 */}
@@ -761,8 +761,8 @@ export const SearchBar: React.FC<SearchBarProps> = ({
             <div
               className={`absolute top-full left-0 mt-2 w-72 sm:w-80 p-2 rounded-2xl site-glass border-0 shadow-2xl z-50 animate-in fade-in zoom-in-95 duration-150 ${
                 isDarkMode
-                  ? 'bg-neutral-950/85 text-white shadow-black/60'
-                  : 'bg-white/85 text-slate-800 shadow-slate-900/20'
+                  ? 'site-glass-dark text-white shadow-black/60'
+                  : 'site-glass-light text-slate-800 shadow-slate-900/20'
               }`}
             >
               {/* 分类快捷标签 */}
@@ -894,8 +894,8 @@ export const SearchBar: React.FC<SearchBarProps> = ({
         <div
           className={`absolute top-full left-4 right-4 mt-2 p-2 rounded-2xl site-glass border-0 shadow-2xl z-40 animate-in fade-in zoom-in-95 duration-150 ${
             isDarkMode
-              ? 'bg-neutral-950/85 text-white shadow-black/60'
-              : 'bg-white/85 text-slate-800 shadow-slate-900/20'
+              ? 'site-glass-dark text-white shadow-black/60'
+              : 'site-glass-light text-slate-800 shadow-slate-900/20'
           }`}
         >
           <div className={`flex items-center justify-between px-2.5 py-1 text-xs text-amber-400 font-semibold border-b pb-1 mb-1 ${
@@ -949,8 +949,8 @@ export const SearchBar: React.FC<SearchBarProps> = ({
         <div
           className={`absolute top-full left-4 right-4 mt-2 p-2 rounded-2xl site-glass border-0 shadow-2xl z-40 animate-in fade-in zoom-in-95 duration-150 ${
             isDarkMode
-              ? 'bg-neutral-950/85 text-white shadow-black/60'
-              : 'bg-white/85 text-slate-800 shadow-slate-900/20'
+              ? 'site-glass-dark text-white shadow-black/60'
+              : 'site-glass-light text-slate-800 shadow-slate-900/20'
           }`}
         >
           <div className={`flex items-center justify-between px-2.5 py-1 text-xs border-b pb-1.5 mb-1 ${
