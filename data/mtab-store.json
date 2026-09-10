@@ -1,0 +1,197 @@
+{
+  "config": {
+    "theme": {
+      "wallpaperType": "bing",
+      "wallpaperUrl": "",
+      "blur": 0,
+      "opacity": 0.25,
+      "timeColor": "#ffffff",
+      "time24": true,
+      "timeSeconds": true,
+      "timeLunar": true,
+      "iconSize": "md",
+      "iconRadius": "lg",
+      "showTitle": true,
+      "columns": 6
+    },
+    "openInNewTab": true,
+    "tabbarEnabled": true
+  },
+  "links": [
+    {
+      "id": "1",
+      "name": "GitHub",
+      "url": "https://github.com",
+      "icon": "Github",
+      "bgColor": "#181717",
+      "category": "开发",
+      "size": "1x1",
+      "sort": 1,
+      "description": "代码托管与开源协作"
+    },
+    {
+      "id": "2",
+      "name": "哔哩哔哩",
+      "url": "https://www.bilibili.com",
+      "icon": "Tv",
+      "bgColor": "#00AEEC",
+      "category": "媒体",
+      "size": "1x1",
+      "sort": 2,
+      "description": "国内知名弹幕视频网"
+    },
+    {
+      "id": "3",
+      "name": "Cloudflare",
+      "url": "https://dash.cloudflare.com",
+      "icon": "Cloud",
+      "bgColor": "#F38020",
+      "category": "开发",
+      "size": "1x1",
+      "sort": 3,
+      "description": "全球 CDN & Serverless"
+    },
+    {
+      "id": "4",
+      "name": "YouTube",
+      "url": "https://www.youtube.com",
+      "icon": "Youtube",
+      "bgColor": "#FF0000",
+      "category": "媒体",
+      "size": "1x1",
+      "sort": 4,
+      "description": "全球视频平台"
+    },
+    {
+      "id": "5",
+      "name": "知乎",
+      "url": "https://www.zhihu.com",
+      "icon": "BookOpen",
+      "bgColor": "#0084FF",
+      "category": "社区",
+      "size": "1x1",
+      "sort": 5,
+      "description": "中文互联网问答社区"
+    },
+    {
+      "id": "6",
+      "name": "微博",
+      "url": "https://weibo.com",
+      "icon": "Flame",
+      "bgColor": "#E6162D",
+      "category": "社区",
+      "size": "1x1",
+      "sort": 6,
+      "description": "发现新鲜事"
+    },
+    {
+      "id": "7",
+      "name": "V2EX",
+      "url": "https://www.v2ex.com",
+      "icon": "Terminal",
+      "bgColor": "#333333",
+      "category": "社区",
+      "size": "1x1",
+      "sort": 7,
+      "description": "创意工作者的社区"
+    },
+    {
+      "id": "8",
+      "name": "掘金",
+      "url": "https://juejin.cn",
+      "icon": "Code",
+      "bgColor": "#1E80FF",
+      "category": "开发",
+      "size": "1x1",
+      "sort": 8,
+      "description": "开发者成长社区"
+    },
+    {
+      "id": "9",
+      "name": "阿里云",
+      "url": "https://aliyun.com",
+      "icon": "Server",
+      "bgColor": "#FF6A00",
+      "category": "工具",
+      "size": "1x1",
+      "sort": 9,
+      "description": "云计算与数据智能"
+    },
+    {
+      "id": "10",
+      "name": "网易云音乐",
+      "url": "https://music.163.com",
+      "icon": "Music",
+      "bgColor": "#C20C0C",
+      "category": "媒体",
+      "size": "1x1",
+      "sort": 10,
+      "description": "听见好时光"
+    },
+    {
+      "id": "11",
+      "name": "Notion",
+      "url": "https://notion.so",
+      "icon": "FileText",
+      "bgColor": "#000000",
+      "category": "工具",
+      "size": "1x1",
+      "sort": 11,
+      "description": "全合一工作笔记"
+    },
+    {
+      "id": "12",
+      "name": "DeepL 翻译",
+      "url": "https://www.deepl.com/translator",
+      "icon": "Languages",
+      "bgColor": "#0F2B46",
+      "category": "工具",
+      "size": "1x1",
+      "sort": 12,
+      "description": "高精度人工智能翻译"
+    }
+  ],
+  "notes": [
+    {
+      "id": "n1",
+      "title": "Cloudflare 绑定说明",
+      "content": "直接在 Cloudflare Workers 后台绑定 KV (变量名: MTAB_KV) 或 D1 (变量名: MTAB_D1) 即可实现云端存储与多端秒级同步！",
+      "color": "amber",
+      "updatedAt": 1789007596856
+    },
+    {
+      "id": "n2",
+      "title": "待办灵感",
+      "content": "1. 导出书签为 HTML/JSON\n2. 自定义搜索引擎快捷键\n3. 切换 Bing 4K 壁纸",
+      "color": "blue",
+      "updatedAt": 1789003996856
+    }
+  ],
+  "todos": [
+    {
+      "id": "t1",
+      "text": "部署 Cloudflare Worker 并绑定 KV/D1",
+      "completed": true,
+      "priority": "high",
+      "folder": "today",
+      "createdAt": 1789000396856
+    },
+    {
+      "id": "t2",
+      "text": "体验 Mtab 电子木鱼与全网热搜小部件",
+      "completed": false,
+      "priority": "medium",
+      "folder": "today",
+      "createdAt": 1789003996856
+    },
+    {
+      "id": "t3",
+      "text": "添加个人最常用网站到主界面",
+      "completed": false,
+      "priority": "low",
+      "folder": "week",
+      "createdAt": 1789005796856
+    }
+  ],
+  "updatedAt": 1789007596856
+}

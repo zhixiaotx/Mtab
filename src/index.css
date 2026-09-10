@@ -1,0 +1,27 @@
+@import "tailwindcss";
+
+@keyframes fadeUp {
+  0% {
+    opacity: 1;
+    transform: translateY(0) scale(0.9);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-48px) scale(1.25);
+  }
+}
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* 整站动态毛玻璃样式 (可由设置中的滑块实时调节) */
+.site-glass {
+  backdrop-filter: blur(var(--glass-blur, 16px));
+  -webkit-backdrop-filter: blur(var(--glass-blur, 16px));
+}
+

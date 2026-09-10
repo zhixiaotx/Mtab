@@ -1,0 +1,6 @@
+{
+  "name": "Mtab Cloudflare Edition",
+  "description": "Mtab书签导航程序二次开发版，支持Cloudflare KV与D1云端数据库存储，解决CORS跨域问题，支持网页端快速绑定与多端同步",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
