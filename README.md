@@ -284,14 +284,42 @@
 
 - **选项 2：绑定 KV 命名空间 (极速键值对存储，秒级即用无需建表)**：
   1. 左侧菜单点击 **Workers 和 Pages** -> **KV** (或 **KV 命名空间**) -> 点击 **创建命名空间**；
-  2. 命名空间名称填入 `mtab-kv`，点击 **添加** 保存；
+  2. 命名空间名称填入 `mtab-kv`，点击 **添加** 保存；并在列表中复制产生的 **Namespace ID**；
   3. 回到你的 Worker（`mtab-api`）页面 -> **设置** -> **变量**；
   4. 找到 **KV 命名空间绑定** 区域，点击 **添加绑定**；
-  5. 变量名称填 **`MTAB_KV`**（或 `KV`），KV 命名空间选择刚刚创建的 `mtab-kv`；
-  6. 点击 **保存并部署** 即可生效。
+  5. 变量名称填 **`MTAB_KV`**（必须全大写，也可填 `KV`），KV 命名空间选择刚刚创建的 `mtab-kv`；
+  6. **⚠️ 极其关键**：务必点击底部的 **保存并部署 (Save and Deploy)** 按钮！如果只点了保存而没点部署，线上环境不会生效！
 
 - **安全令牌配置 (授权鉴权)**：
-  - 在 Worker **设置** -> **环境变量** 添加变量名 `AUTH_TOKEN`（或 `MTAB_TOKEN`），值设定为你的专属访问密码（如 `MySecretPassword123`），保存部署。后续在前台网页同步弹窗填入此密码即可完成加密安全同步。
+  - 在 Worker **设置** -> **环境变量** 添加变量名 `AUTH_TOKEN`（或 `MTAB_TOKEN`），值设定为你的专属访问密码（如 `MySecretPassword123`），保存并部署。后续在前台网页同步弹窗填入此密码即可完成加密安全同步。
+
+#### 🚨 常见问题：Cloudflare Worker 绑定 KV 部署失败排查与 5 大解决方案
+
+如果你在绑定 KV 后提示部署失败、同步报错 `500` 或 `未检测到已绑定的 KV`，请对照以下步骤秒级修复：
+
+| 故障现象 / 报错信息 | 根本原因 | 解决办法 |
+| :--- | :--- | :--- |
+| **1. 网页提示“未检测到已绑定的 KV 或 D1”** | 仅点了“保存”未点“保存并部署” | 进入 Worker 设置 -> 变量 -> 点击底部的 **保存并部署 (Save and Deploy)**，刷新生效 |
+| **2. Worker 部署报错 `Unknown variable` 或 `Invalid binding`** | 变量名称拼写错误 | 变量名称必须为全大写 **`MTAB_KV`** 或 **`KV`**，不要写成小写 `mtab_kv` |
+| **3. 使用 Wrangler 命令行 `npx wrangler deploy` 报错** | 未配置 `wrangler.toml` 中的 `kv_namespaces` | 使用项目中提供的 `cloudflare/wrangler.toml`，填入真实的 KV Namespace ID 即可一键部署 |
+| **4. 提示 401 Unauthorized 错误** | 网页端的 Token 与 Worker 的 `AUTH_TOKEN` 不一致 | 在 Worker 环境变量中设置 `AUTH_TOKEN=你的密码`，并在前台云同步弹窗中输入相同的密码 |
+| **5. 误在 Cloudflare Pages 中绑定了 KV** | Pages 的 KV 无法直接被 Worker 访问 | 务必进入 **Workers 和 Pages** -> 选择你的 **Worker 实例 (如 mtab-api)** 进行 KV 绑定 |
+
+##### 💡 替代方式：使用 Wrangler 命令行一键部署 KV (零图形界面误操作)
+如果你更习惯命令行，可以直接使用 Wrangler 命令部署：
+```bash
+# 1. 进入 cloudflare 目录
+cd cloudflare
+
+# 2. 登录 Cloudflare 账号
+npx wrangler login
+
+# 3. 创建 KV 命名空间 (会自动输出 Namespace ID)
+npx wrangler kv:namespace create mtab-kv
+
+# 4. 修改 wrangler.toml，填入生成的 id，然后一键部署
+npx wrangler deploy
+```
 
 #### 阶段 C：部署 Cloudflare Pages 前端
 1. 控制台点击 **Workers 和 Pages** -> **创建应用程序** -> **Pages** -> **连接到 Git**；

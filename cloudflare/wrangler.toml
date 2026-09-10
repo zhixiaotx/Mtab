@@ -1,0 +1,19 @@
+name = "mtab-api"
+main = "worker.js"
+compatibility_date = "2024-09-01"
+
+# 1. KV 命名空间绑定 (将 <YOUR_KV_NAMESPACE_ID> 替换为你的 KV Namespace ID)
+# 获取 ID 路径: Cloudflare 控制台 -> Workers & Pages -> KV -> 点击你的 KV Namespace -> 查看 Namespace ID
+[[kv_namespaces]]
+binding = "MTAB_KV"
+id = "YOUR_KV_NAMESPACE_ID_HERE"
+
+# 2. D1 数据库绑定 (可选，如使用 D1 请取消注释并填入数据库 ID)
+# [[d1_databases]]
+# binding = "MTAB_D1"
+# database_name = "mtab-db"
+# database_id = "YOUR_D1_DATABASE_ID_HERE"
+
+# 3. 环境变量 (访问鉴权令牌)
+[vars]
+AUTH_TOKEN = "MySecretPassword123"
